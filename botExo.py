@@ -1,6 +1,8 @@
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.types import Message
+from aiogram.filters import ChatMemberUpdatedFilter, KICKED
+from aiogram.types import ChatMemberUpdated
 
 # Вместо BOT TOKEN HERE нужно вставить токен вашего бота, полученный у @BotFather
 BOT_TOKEN = '7057532692:AAHwUixvbpFE5Zu3mcDAWIXAlkzIhvbQcvo'
@@ -20,12 +22,18 @@ async def process_start_command(message: Message):
 
 
 
+
 # Этот хэндлер будет срабатывать на команду "/help"
 async def process_help_command(message: Message):
     await message.answer(
         'Напиши мне что-нибудь и в ответ '
         'я пришлю тебе твое сообщение'
     )
+
+@dp.my_chat_member(ChatMemberUpdatedFilter(member_status_changed=KICKED))
+async def process_user_blocked_bot(event: ChatMemberUpdated):
+    print(f'Пользователь {event.from_user.id} заблокировал бота')
+
 
 
 
